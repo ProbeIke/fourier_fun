@@ -28,25 +28,10 @@ public class GUI {
 		//frame.pack();
 		frame.setVisible(true);
 		
-		switch(purpose) {
-		
-		case "Original_Input":
-			QuerySin();
-			
-		case "Sin_Input":
-			GenerateSinInputs(fourier.num_sin_functions);
-				
-		case "Implement_Fourier":
-		
-		
-		}
-		
-		
-		System.out.println("This isn't a GUI");
 	}
 	
 	
-	public static void QuerySin()
+	public void QuerySin()
 	{
 		
 		// Generate input for number of sin functions
@@ -56,9 +41,6 @@ public class GUI {
 		
 		int sin_functions;
 		
-		FourierSeries fourier = new FourierSeries();
-		
-		fourier.num_sin_functions = sin_functions;
 		
 		int panelsize = 500;
 		GUI sin_input = new GUI();
@@ -68,9 +50,13 @@ public class GUI {
 	
 	public static void GenerateSinInputs(int num_sin_functions) {
 		
+		float[][] sin_coeff = new float[2][num_sin_functions];
 		
 		for (int i = 0; i < num_sin_functions; i++) {
-			// Generate input for sin functions
+
+
+			sin_coeff[0][i] = input_a;
+			sin_coeff[1][i] = input_freq;
 		}
 		
 	}
