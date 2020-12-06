@@ -54,6 +54,7 @@ public class GUI {
 		
 		for (int i = 0; i < num_sin_functions; i++) {
 
+			// Create input
 
 			sin_coeff[0][i] = input_a;
 			sin_coeff[1][i] = input_freq;
