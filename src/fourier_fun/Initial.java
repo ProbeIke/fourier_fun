@@ -6,12 +6,9 @@ public class Initial {
 		GUI start = new GUI();
 				
 		int panelsize = 500;
-		String purpose = "Original_Input";
 		
-		start.buildGUI(panelsize,purpose);
+		start.buildGUI(panelsize);
 		start.QuerySin();
-		
-		
 		
 	}
 }

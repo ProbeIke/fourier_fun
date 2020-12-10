@@ -12,7 +12,7 @@ import javax.swing.BorderFactory;
 public class GUI {
 
 	
-	public void buildGUI(int panelsize, String purpose) {
+	public void buildGUI(int panelsize) {
 		
 		JPanel panel = new JPanel();
 		
@@ -24,9 +24,9 @@ public class GUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.add(panel);
-		frame.setTitle("Input Number of sin functions");
 		//frame.pack();
 		frame.setVisible(true);
+		
 		
 	}
 	
@@ -42,24 +42,13 @@ public class GUI {
 		int sin_functions;
 		
 		
+		
+		
 		int panelsize = 500;
-		GUI sin_input = new GUI();
-		sin_input.buildGUI(panelsize, "Sin_Input");
-		
-	}
-	
-	public static void GenerateSinInputs(int num_sin_functions) {
-		
-		float[][] sin_coeff = new float[2][num_sin_functions];
-		
-		for (int i = 0; i < num_sin_functions; i++) {
+		GUI sin_input = new GUI_SinInputs();
+		sin_input.buildGUI(panelsize);
+		sin_input.GenerateSinInputs(sin_functions);
 
-			// Create input
-
-			sin_coeff[0][i] = input_a;
-			sin_coeff[1][i] = input_freq;
-		}
-		
 	}
-	
+
 }
