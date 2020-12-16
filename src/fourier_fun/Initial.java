@@ -3,12 +3,11 @@ package fourier_fun;
 public class Initial {
 	
 	public static void main(String[] args) {
-		GUI start = new GUI();
-				
+	
 		int panelsize = 500;
 		
-		start.buildGUI(panelsize);
-		start.QuerySin();
-		
+		GUI sin_input = new GUI_NumSinInput();
+		sin_input.buildGUI(panelsize);
+		sin_input.GenerateInputs();
 	}
 }

@@ -9,7 +9,7 @@ import javax.swing.JButton;
 import javax.swing.BorderFactory;
 
 
-public class GUI {
+public abstract class GUI {
 
 	
 	public void buildGUI(int panelsize) {
@@ -31,24 +31,6 @@ public class GUI {
 	}
 	
 	
-	public void QuerySin()
-	{
-		
-		// Generate input for number of sin functions
-		
-		//Create new GUI which passes string "Sin_Input" to make sin input occur
-		
-		
-		int sin_functions;
-		
-		
-		
-		
-		int panelsize = 500;
-		GUI sin_input = new GUI_SinInputs();
-		sin_input.buildGUI(panelsize);
-		sin_input.GenerateSinInputs(sin_functions);
-
-	}
+	public abstract void GenerateInputs();
 
 }
