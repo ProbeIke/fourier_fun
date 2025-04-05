@@ -167,25 +167,6 @@ function WaveVisualizer({
     sceneRef.current.add(waveLine);
     waveRef.current = waveLine;
     
-    // Create a group of small spheres at each data point for better visibility
-    const sphereGroup = new THREE.Group();
-    const sphereGeometry = new THREE.SphereGeometry(0.05, 8, 8);
-    const sphereMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color(color) });
-    
-    points.forEach((point, i) => {
-      // Only add spheres at regular intervals to avoid too many objects
-      if (i % 8 === 0) {
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphere.position.set(point.x, point.y, point.z);
-        sphereGroup.add(sphere);
-      }
-    });
-    
-    sceneRef.current.add(sphereGroup);
-    
-    // Add sphereGroup to waveRef.current for cleanup
-    waveRef.current.userData = { sphereGroup };
-    
   }, [waveData, dimensions, color]);
 
   return (
