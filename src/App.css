@@ -1,0 +1,152 @@
+/* Main container */
+.app-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header styles */
+.app-header {
+  margin-bottom: 2rem;
+}
+
+.app-header h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  background: linear-gradient(45deg, #3498db, #8e44ad);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.app-description {
+  font-size: 1.2rem;
+  color: #888;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Main content */
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Section styles */
+.intro-section,
+.features-section {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.intro-section h2,
+.features-section h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #61dafb;
+}
+
+/* Info button */
+.info-button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s, background-color 0.25s;
+  margin: 1rem 0;
+}
+
+.info-button:hover {
+  border-color: #646cff;
+  background-color: #2a2a2a;
+}
+
+.info-button:focus,
+.info-button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Info panel */
+.info-panel {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  text-align: left;
+}
+
+.info-panel h3 {
+  margin-top: 0;
+  color: #61dafb;
+  font-size: 1.4rem;
+}
+
+.info-panel ul {
+  padding-left: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-panel li {
+  margin-bottom: 0.5rem;
+}
+
+/* Feature cards */
+.feature-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.feature-card {
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-card h3 {
+  margin-top: 0;
+  color: #61dafb;
+  font-size: 1.4rem;
+}
+
+/* Footer */
+.app-footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  .feature-cards {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .feature-card {
+    flex: 1;
+    margin: 0 0.5rem;
+  }
+}
