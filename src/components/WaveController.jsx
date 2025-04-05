@@ -6,15 +6,27 @@ import { generateCompositeWave, calculateFourierTransform } from '../utils/waveU
  * @param {Object} props - Component props
  * @param {Function} props.onWaveDataChange - Callback when wave data changes
  * @param {Function} props.onFourierDataChange - Callback when Fourier data changes
+ * @param {Function} props.onFrequenciesChange - Callback when frequencies change
+ * @param {Function} props.onAmplitudesChange - Callback when amplitudes change
+ * @param {Function} props.onPhasesChange - Callback when phases change
+ * @param {Array<number>} props.initialFrequencies - Initial frequencies
+ * @param {Array<number>} props.initialAmplitudes - Initial amplitudes
+ * @param {Array<number>} props.initialPhases - Initial phases
  */
 function WaveController({ 
   onWaveDataChange, 
-  onFourierDataChange 
+  onFourierDataChange,
+  onFrequenciesChange,
+  onAmplitudesChange,
+  onPhasesChange,
+  initialFrequencies = [2, 5, 8],
+  initialAmplitudes = [0.5, 0.3, 0.2],
+  initialPhases = [0, Math.PI / 4, Math.PI / 2]
 }) {
   // Wave parameters
-  const [frequencies, setFrequencies] = useState([2, 5, 8]);
-  const [amplitudes, setAmplitudes] = useState([0.5, 0.3, 0.2]);
-  const [phases, setPhases] = useState([0, Math.PI / 4, Math.PI / 2]);
+  const [frequencies, setFrequencies] = useState(initialFrequencies);
+  const [amplitudes, setAmplitudes] = useState(initialAmplitudes);
+  const [phases, setPhases] = useState(initialPhases);
   const [sampleCount, setSampleCount] = useState(1024);
   
   // Update wave data when parameters change
@@ -45,6 +57,9 @@ function WaveController({
     const newFrequencies = [...frequencies];
     newFrequencies[index] = parseFloat(value);
     setFrequencies(newFrequencies);
+    if (onFrequenciesChange) {
+      onFrequenciesChange(newFrequencies);
+    }
   };
   
   // Update an amplitude at a specific index
@@ -52,6 +67,9 @@ function WaveController({
     const newAmplitudes = [...amplitudes];
     newAmplitudes[index] = parseFloat(value);
     setAmplitudes(newAmplitudes);
+    if (onAmplitudesChange) {
+      onAmplitudesChange(newAmplitudes);
+    }
   };
   
   // Update a phase at a specific index
@@ -59,6 +77,9 @@ function WaveController({
     const newPhases = [...phases];
     newPhases[index] = parseFloat(value);
     setPhases(newPhases);
+    if (onPhasesChange) {
+      onPhasesChange(newPhases);
+    }
   };
   
   return (

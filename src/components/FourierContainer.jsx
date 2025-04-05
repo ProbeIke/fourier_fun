@@ -9,6 +9,9 @@ import FourierVisualizer from './FourierVisualizer';
 function FourierContainer() {
   const [waveData, setWaveData] = useState([]);
   const [fourierData, setFourierData] = useState([]);
+  const [frequencies, setFrequencies] = useState([2, 5, 8]);
+  const [amplitudes, setAmplitudes] = useState([0.5, 0.3, 0.2]);
+  const [phases, setPhases] = useState([0, Math.PI / 4, Math.PI / 2]);
   
   return (
     <div className="fourier-container">
@@ -19,6 +22,9 @@ function FourierContainer() {
             waveData={waveData} 
             dimensions={{ width: 10, height: 2, depth: 3 }}
             color="#61dafb"
+            frequencies={frequencies}
+            amplitudes={amplitudes}
+            phases={phases}
           />
         </div>
         
@@ -36,6 +42,12 @@ function FourierContainer() {
         <WaveController 
           onWaveDataChange={setWaveData}
           onFourierDataChange={setFourierData}
+          onFrequenciesChange={setFrequencies}
+          onAmplitudesChange={setAmplitudes}
+          onPhasesChange={setPhases}
+          initialFrequencies={frequencies}
+          initialAmplitudes={amplitudes}
+          initialPhases={phases}
         />
       </div>
     </div>

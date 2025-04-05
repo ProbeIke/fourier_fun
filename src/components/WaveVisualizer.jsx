@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { createWavePoints } from '../utils/waveUtils';
+import { createWavePoints, createComponentWavePoints } from '../utils/waveUtils';
 
 /**
  * Component for 3D visualization of a sound wave
@@ -9,11 +9,17 @@ import { createWavePoints } from '../utils/waveUtils';
  * @param {Array<number>} props.waveData - Array of wave amplitude values
  * @param {Object} props.dimensions - Dimensions for the visualization
  * @param {string} props.color - Color of the wave line
+ * @param {Array<number>} props.frequencies - Array of frequencies for component waves
+ * @param {Array<number>} props.amplitudes - Array of amplitudes for component waves
+ * @param {Array<number>} props.phases - Array of phases for component waves
  */
 function WaveVisualizer({ 
   waveData = [], 
   dimensions = { width: 10, height: 2, depth: 3 },
-  color = '#61dafb'
+  color = '#61dafb',
+  frequencies = [2, 5, 8],
+  amplitudes = [0.5, 0.3, 0.2],
+  phases = [0, Math.PI / 4, Math.PI / 2]
 }) {
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
@@ -21,6 +27,7 @@ function WaveVisualizer({
   const cameraRef = useRef(null);
   const controlsRef = useRef(null);
   const waveRef = useRef(null);
+  const componentWavesRef = useRef([]);
 
   // Initialize the 3D scene
   useEffect(() => {
@@ -38,6 +45,7 @@ function WaveVisualizer({
       0.1,
       1000
     );
+    // Position camera to view waves from the side
     camera.position.set(0, 2, 5);
     cameraRef.current = camera;
 
@@ -70,6 +78,10 @@ function WaveVisualizer({
     directionalLight.position.set(5, 10, 7.5);
     scene.add(directionalLight);
 
+    // Animation variables
+    let time = 0;
+    const speed = 0.01;
+
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
@@ -78,9 +90,8 @@ function WaveVisualizer({
         controlsRef.current.update();
       }
       
-      if (waveRef.current) {
-        waveRef.current.rotation.y += 0.002;
-      }
+      // Update time for wave translation
+      time += speed;
       
       renderer.render(scene, camera);
     };
@@ -126,6 +137,87 @@ function WaveVisualizer({
     };
   }, []);
 
+  // Store original wave data for animation
+  const originalWaveDataRef = useRef([]);
+  
+  // Animation variables
+  const timeRef = useRef(0);
+  const speedRef = useRef(0.05);
+  
+  // Store component wave data for animation
+  const componentWaveDataRef = useRef([]);
+  
+  // Update the animation loop when waveData changes
+  useEffect(() => {
+    if (!sceneRef.current || !rendererRef.current || waveData.length === 0) return;
+    
+    // Store the original wave data for animation
+    originalWaveDataRef.current = [...waveData];
+    
+    // Animation function for wave translation
+    const animateWaves = () => {
+      // Update time
+      timeRef.current += speedRef.current;
+      
+      // Animate main wave
+      if (waveRef.current && waveRef.current.geometry) {
+        const positions = waveRef.current.geometry.attributes.position.array;
+        const count = positions.length / 3;
+        
+        for (let i = 0; i < count; i++) {
+          const x = positions[i * 3]; // x position
+          const originalY = originalWaveDataRef.current[i % originalWaveDataRef.current.length];
+          
+          // Calculate y position based on time and x position
+          // This creates a wave that moves along the x-axis
+          positions[i * 3 + 1] = originalY;
+        }
+        
+        waveRef.current.geometry.attributes.position.needsUpdate = true;
+      }
+      
+      // Animate component waves
+      componentWavesRef.current.forEach((wave, waveIndex) => {
+        if (wave && wave.geometry) {
+          const positions = wave.geometry.attributes.position.array;
+          const count = positions.length / 3;
+          
+          // Get the frequency for this component wave
+          const freq = frequencies[waveIndex] || 1;
+          const phase = phases[waveIndex] || 0;
+          
+          for (let i = 0; i < count; i++) {
+            const x = positions[i * 3]; // x position
+            
+            // Calculate the wave position based on time, frequency, and phase
+            // This creates a wave that translates along the x-axis at the wave frequency
+            const t = timeRef.current * freq * 0.5;
+            const wavePos = Math.sin(2 * Math.PI * freq * (x / dimensions.width + t) + phase);
+            
+            // Update y position
+            positions[i * 3 + 1] = wavePos * (amplitudes[waveIndex] || 0.5);
+          }
+          
+          wave.geometry.attributes.position.needsUpdate = true;
+        }
+      });
+    };
+    
+    // Add the animation function to the render loop
+    const originalRender = rendererRef.current.render;
+    rendererRef.current.render = function() {
+      animateWaves();
+      originalRender.apply(this, arguments);
+    };
+    
+    return () => {
+      // Restore original render function on cleanup
+      if (rendererRef.current) {
+        rendererRef.current.render = originalRender;
+      }
+    };
+  }, [waveData, frequencies, amplitudes, phases, dimensions.width]);
+  
   // Update the wave visualization when waveData changes
   useEffect(() => {
     if (!sceneRef.current || waveData.length === 0) return;
@@ -136,6 +228,16 @@ function WaveVisualizer({
       if (waveRef.current.geometry) waveRef.current.geometry.dispose();
       if (waveRef.current.material) waveRef.current.material.dispose();
     }
+
+    // Remove previous component waves if they exist
+    componentWavesRef.current.forEach(wave => {
+      if (wave) {
+        sceneRef.current.remove(wave);
+        if (wave.geometry) wave.geometry.dispose();
+        if (wave.material) wave.material.dispose();
+      }
+    });
+    componentWavesRef.current = [];
 
     // Create wave points
     const points = createWavePoints(waveData, dimensions.width, dimensions.height, dimensions.depth);
@@ -167,7 +269,58 @@ function WaveVisualizer({
     sceneRef.current.add(waveLine);
     waveRef.current = waveLine;
     
-  }, [waveData, dimensions, color]);
+    // Create component waves
+    const componentWavePoints = createComponentWavePoints(
+      waveData.length,
+      frequencies,
+      amplitudes,
+      phases,
+      dimensions.width,
+      dimensions.height,
+      dimensions.depth
+    );
+    
+    // Create component wave colors (different shades of the main color)
+    const componentColors = [
+      '#ff6b6b', // Red
+      '#48dbfb', // Blue
+      '#1dd1a1', // Green
+      '#feca57', // Yellow
+      '#5f27cd'  // Purple
+    ];
+    
+    // Create and add component waves to the scene
+    componentWavePoints.forEach((componentPoints, index) => {
+      // Create component wave geometry
+      const componentGeometry = new THREE.BufferGeometry();
+      
+      // Create positions array for the component line
+      const componentPositions = new Float32Array(componentPoints.length * 3);
+      
+      componentPoints.forEach((point, i) => {
+        componentPositions[i * 3] = point.x;
+        componentPositions[i * 3 + 1] = point.y;
+        componentPositions[i * 3 + 2] = point.z;
+      });
+      
+      componentGeometry.setAttribute('position', new THREE.BufferAttribute(componentPositions, 3));
+      
+      // Create component wave material with a different color
+      const componentColor = componentColors[index % componentColors.length];
+      const componentMaterial = new THREE.LineBasicMaterial({
+        color: new THREE.Color(componentColor),
+        linewidth: 2
+      });
+      
+      // Create component wave line
+      const componentLine = new THREE.Line(componentGeometry, componentMaterial);
+      
+      // Add component wave to scene
+      sceneRef.current.add(componentLine);
+      componentWavesRef.current.push(componentLine);
+    });
+    
+  }, [waveData, dimensions, color, frequencies, amplitudes, phases]);
 
   return (
     <div 

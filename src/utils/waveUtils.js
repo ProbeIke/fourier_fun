@@ -100,6 +100,93 @@ export function createWavePoints(samples, width = 10, height = 2, depth = 3) {
 }
 
 /**
+ * Generates a single component wave
+ * @param {number} sampleCount - Number of samples to generate
+ * @param {number} frequency - Frequency in Hz
+ * @param {number} amplitude - Amplitude of the wave
+ * @param {number} phase - Phase shift in radians
+ * @returns {Array<number>} - Array of wave amplitude values
+ */
+export function generateComponentWave(
+  sampleCount = 1024,
+  frequency = 2,
+  amplitude = 0.5,
+  phase = 0
+) {
+  const samples = new Array(sampleCount).fill(0);
+  const timeStep = 1 / sampleCount;
+  
+  for (let i = 0; i < sampleCount; i++) {
+    const t = i * timeStep;
+    samples[i] = amplitude * Math.sin(2 * Math.PI * frequency * t + phase);
+  }
+  
+  return samples;
+}
+
+/**
+ * Creates 3D points for component waves visualization
+ * @param {number} sampleCount - Number of samples to generate
+ * @param {Array<number>} frequencies - Array of frequencies in Hz
+ * @param {Array<number>} amplitudes - Array of amplitudes for each frequency
+ * @param {Array<number>} phases - Array of phase shifts for each frequency (in radians)
+ * @param {number} width - Width of the visualization
+ * @param {number} height - Height of the visualization
+ * @param {number} depth - Depth of the visualization (for 3D effect)
+ * @returns {Array<Array<{x: number, y: number, z: number}>>} - Array of arrays of 3D points, one array per component
+ */
+export function createComponentWavePoints(
+  sampleCount = 1024,
+  frequencies = [2, 5, 8],
+  amplitudes = [0.5, 0.3, 0.2],
+  phases = [0, Math.PI / 4, Math.PI / 2],
+  width = 10,
+  height = 2,
+  depth = 3
+) {
+  // Ensure all arrays have the same length
+  const componentCount = Math.min(
+    frequencies.length,
+    amplitudes.length,
+    phases.length
+  );
+  
+  const componentWaves = [];
+  
+  // Generate each component wave
+  for (let j = 0; j < componentCount; j++) {
+    const componentSamples = generateComponentWave(
+      sampleCount,
+      frequencies[j],
+      amplitudes[j],
+      phases[j]
+    );
+    
+    // Create points for this component
+    const normalizedSamples = normalizeValues(componentSamples, -height / 2, height / 2);
+    const points = [];
+    
+    const segmentWidth = width / (sampleCount - 1);
+    
+    // Calculate z-offset for this component
+    // Space components evenly along z-axis
+    const zOffset = -depth / 2 + (j + 1) * (depth / (componentCount + 1));
+    
+    for (let i = 0; i < sampleCount; i++) {
+      const x = -width / 2 + i * segmentWidth;
+      const y = normalizedSamples[i];
+      const z = zOffset;
+      
+      points.push({ x, y, z });
+    }
+    
+    componentWaves.push(points);
+  }
+  
+  return componentWaves;
+}
+
+/**
  * Creates 3D points for a Fourier transform visualization
  * @param {Array<{frequency: number, magnitude: number, phase: number}>} fourierData - Fourier transform data
  * @param {number} width - Width of the visualization

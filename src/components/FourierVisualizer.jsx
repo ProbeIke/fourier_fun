@@ -38,6 +38,7 @@ function FourierVisualizer({
       0.1,
       1000
     );
+    // Position camera to view bars from the front
     camera.position.set(0, 4, 7);
     cameraRef.current = camera;
 
@@ -76,10 +77,6 @@ function FourierVisualizer({
       
       if (controlsRef.current) {
         controlsRef.current.update();
-      }
-      
-      if (barsRef.current) {
-        barsRef.current.rotation.y += 0.002;
       }
       
       renderer.render(scene, camera);
@@ -126,6 +123,59 @@ function FourierVisualizer({
     };
   }, []);
 
+  // Store original Fourier data for animation
+  const originalFourierDataRef = useRef([]);
+  
+  // Animation variables
+  const timeRef = useRef(0);
+  const speedRef = useRef(0.05);
+  
+  // Update the animation loop when fourierData changes
+  useEffect(() => {
+    if (!sceneRef.current || !rendererRef.current || fourierData.length === 0) return;
+    
+    // Store the original Fourier data for animation
+    originalFourierDataRef.current = [...fourierData];
+    
+    // Animation function for bar translation
+    const animateBars = () => {
+      if (!barsRef.current) return;
+      
+      // Update time
+      timeRef.current += speedRef.current;
+      
+      // Animate each bar based on its frequency
+      barsRef.current.children.forEach((bar, index) => {
+        if (index < originalFourierDataRef.current.length) {
+          const frequency = originalFourierDataRef.current[index].frequency;
+          const magnitude = originalFourierDataRef.current[index].magnitude;
+          const phase = originalFourierDataRef.current[index].phase;
+          
+          // Calculate vertical translation based on frequency and time
+          // This creates a wave-like motion for each bar
+          const translateY = Math.sin(frequency * 0.2 + timeRef.current * frequency * 0.5 + phase) * 0.2;
+          
+          // Apply translation
+          bar.position.y = bar.userData.originalY + translateY;
+        }
+      });
+    };
+    
+    // Add the animation function to the render loop
+    const originalRender = rendererRef.current.render;
+    rendererRef.current.render = function() {
+      animateBars();
+      originalRender.apply(this, arguments);
+    };
+    
+    return () => {
+      // Restore original render function on cleanup
+      if (rendererRef.current) {
+        rendererRef.current.render = originalRender;
+      }
+    };
+  }, [fourierData]);
+  
   // Update the Fourier visualization when fourierData changes
   useEffect(() => {
     if (!sceneRef.current || fourierData.length === 0) return;
@@ -179,6 +229,9 @@ function FourierVisualizer({
       const centerZ = (barPoints[i * pointsPerBar].z + barPoints[i * pointsPerBar + 2].z) / 2;
       
       bar.position.set(centerX, centerY, centerZ);
+      
+      // Store original Y position for animation
+      bar.userData = { originalY: centerY };
       
       barsGroup.add(bar);
     }
