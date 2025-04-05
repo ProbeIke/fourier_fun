@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>Fourier Transform Visualizer</h1>
+        <h1>Andre's Fourier Fun Land</h1>
         <p className="app-description">
           An interactive tool to visualize and hear Fourier transforms
         </p>
