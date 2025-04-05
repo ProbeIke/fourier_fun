@@ -33,7 +33,7 @@ function FourierContainer() {
           <FourierVisualizer 
             fourierData={fourierData} 
             dimensions={{ width: 10, height: 2, depth: 3 }}
-            color="#8e44ad"
+            color="#ffffff"
           />
         </div>
       </div>

@@ -200,11 +200,17 @@ export function createFourierBars(fourierData, width = 10, height = 2, depth = 3
   const normalizedMagnitudes = normalizeValues(magnitudes, 0, height);
   
   const bars = [];
+  
+  // Calculate the width of each bar based on the number of data points
   const barWidth = width / fourierData.length;
   const halfBarWidth = barWidth * 0.8 / 2; // 80% of the available space for each bar
   
+  // Apply a fixed shift of 5 units to center the visualization
+  const xShift = 5;
+  
   for (let i = 0; i < fourierData.length; i++) {
-    const centerX = -width / 2 + (i + 0.5) * barWidth;
+    // Calculate the center X position for each bar with the fixed shift
+    const centerX = -width / 2 + (i + 0.5) * barWidth + xShift;
     const barHeight = normalizedMagnitudes[i];
     
     // Create the 8 vertices of a 3D bar

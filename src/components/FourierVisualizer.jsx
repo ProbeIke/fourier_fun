@@ -13,7 +13,7 @@ import { createFourierBars } from '../utils/waveUtils';
 function FourierVisualizer({ 
   fourierData = [], 
   dimensions = { width: 10, height: 2, depth: 3 },
-  color = '#8e44ad'
+  color = '#ffffff'
 }) {
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
