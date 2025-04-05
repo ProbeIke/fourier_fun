@@ -105,28 +105,118 @@
   margin-bottom: 0.5rem;
 }
 
-/* Feature cards */
-.feature-cards {
+/* Visualization section */
+.visualization-section {
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.visualization-section h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #61dafb;
+}
+
+/* Fourier container */
+.fourier-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
-.feature-card {
-  padding: 1.5rem;
+/* Visualizers */
+.visualizers {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.visualizer-card {
   background-color: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
-  transition: transform 0.3s ease;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.feature-card:hover {
-  transform: translateY(-5px);
-}
-
-.feature-card h3 {
+.visualizer-card h3 {
   margin-top: 0;
   color: #61dafb;
   font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+/* Controller */
+.controller-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.wave-controller h3 {
+  margin-top: 0;
+  color: #61dafb;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.controller-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.controller-section label {
+  min-width: 120px;
+}
+
+.controller-section input {
+  flex: 1;
+}
+
+.wave-components {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.wave-component {
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.wave-component h4 {
+  margin-top: 0;
+  color: #61dafb;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.parameter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.parameter label {
+  min-width: 100px;
+}
+
+.parameter input {
+  flex: 1;
+}
+
+.parameter span {
+  min-width: 60px;
+  text-align: right;
 }
 
 /* Footer */
@@ -140,13 +230,19 @@
 
 /* Responsive adjustments */
 @media (min-width: 768px) {
-  .feature-cards {
+  .visualizers {
     flex-direction: row;
-    justify-content: space-between;
   }
   
-  .feature-card {
+  .visualizer-card {
     flex: 1;
-    margin: 0 0.5rem;
+  }
+  
+  .wave-components {
+    flex-direction: row;
+  }
+  
+  .wave-component {
+    flex: 1;
   }
 }
