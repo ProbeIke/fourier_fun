@@ -170,7 +170,12 @@ function WaveVisualizer({
           
           // Calculate y position based on time and x position
           // This creates a wave that moves along the x-axis
-          positions[i * 3 + 1] = originalY;
+          // Use a combination of frequencies for a more natural motion
+          const t = timeRef.current * 2; // Speed factor
+          const wavePos = Math.sin(2 * Math.PI * (x / dimensions.width + t));
+          
+          // Apply the translation effect to the original wave data
+          positions[i * 3 + 1] = originalY * wavePos;
         }
         
         waveRef.current.geometry.attributes.position.needsUpdate = true;
